@@ -24,5 +24,4 @@ public class NoticeApiController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(saveNotice);
 	}
-
 }
