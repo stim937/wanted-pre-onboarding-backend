@@ -55,7 +55,7 @@ class NoticeApiControllerTest {
 
         //given
         final String url = "/api/notice";
-        final Long company_id = 2L;
+        final Long company_id = 1L;
         final String position = "백엔드 주니어 개발자";
         final int compensation = 1000000;
         final String content = "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..";

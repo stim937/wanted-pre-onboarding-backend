@@ -46,4 +46,12 @@ public class Notice {
 		this.skill = skill;
 		this.company = company;
 	}
+	
+	//수정
+	public void update(String position, int compensation, String content, String skill) {
+		this.position = position;
+		this.compensation = compensation;
+		this.content = content;
+		this.skill = skill;
+    }
 }
