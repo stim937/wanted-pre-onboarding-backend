@@ -68,7 +68,7 @@ class NoticeApiControllerTest {
         //when
         ResultActions result = mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(requestBody));
+                .content(requestBody));  
 
         //then
         result.andExpect(status().isCreated());

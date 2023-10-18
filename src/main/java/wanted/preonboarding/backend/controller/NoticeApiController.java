@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import wanted.preonboarding.backend.domain.Notice;
+import wanted.preonboarding.backend.dto.AddApplication;
 import wanted.preonboarding.backend.dto.AddNoticeRequest;
+import wanted.preonboarding.backend.dto.ApplicationResponse;
 import wanted.preonboarding.backend.dto.NoticeListResponse;
 import wanted.preonboarding.backend.dto.NoticeResponse;
 import wanted.preonboarding.backend.dto.NoticeViewResponse;
@@ -29,26 +31,27 @@ public class NoticeApiController {
 	
 	private final NoticeService noticeService;
 
-	// 1.채용공고 등록 컨트롤러
+	// 1.채용공고 등록
 	@PostMapping("/api/notice")
 	public ResponseEntity<NoticeResponse> addNotice(@RequestBody AddNoticeRequest request) {
 		NoticeResponse response = noticeService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(response);
+        
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	// 2. 채용공고 내용 수정
 	@PutMapping("/api/notice/{noticeId}")
     public ResponseEntity<NoticeResponse> updateNotice(@PathVariable Long noticeId, @RequestBody UpdateNoticeRequeset request) {
 		NoticeResponse response = noticeService.update(noticeId, request);
-		return ResponseEntity.status(HttpStatus.OK)
-                .body(response);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 	
 	// 3. 채용공고 삭제
 	@DeleteMapping("/api/notice/{noticeId}")
     public ResponseEntity<String> deleteNotice(@PathVariable Long noticeId) {
 		noticeService.delete(noticeId);
+		
 		return ResponseEntity.status(HttpStatus.OK).body(noticeId + " 번 채용공고가 삭제되었습니다.");
     }
 	
@@ -79,6 +82,12 @@ public class NoticeApiController {
   
         return ResponseEntity.ok().body((noticeViewResponse));
     }
-    
-    
+	
+	// 6. 사용자가 채용공고에 지원(동일 공고에 두번 지원 x) 
+	@PostMapping("/api/application")
+	public ResponseEntity<ApplicationResponse> addApplication(@RequestBody AddApplication request) {
+		ApplicationResponse response = noticeService.saveApplication(request);
+        
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
 }

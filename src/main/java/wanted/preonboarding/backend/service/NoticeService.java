@@ -3,28 +3,34 @@ package wanted.preonboarding.backend.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import wanted.preonboarding.backend.domain.Application;
 import wanted.preonboarding.backend.domain.Company;
 import wanted.preonboarding.backend.domain.Notice;
+import wanted.preonboarding.backend.domain.User;
+import wanted.preonboarding.backend.dto.AddApplication;
 import wanted.preonboarding.backend.dto.AddNoticeRequest;
+import wanted.preonboarding.backend.dto.ApplicationResponse;
 import wanted.preonboarding.backend.dto.NoticeResponse;
 import wanted.preonboarding.backend.dto.NoticeViewResponse;
 import wanted.preonboarding.backend.dto.UpdateNoticeRequeset;
+import wanted.preonboarding.backend.repository.ApplicationRepository;
 import wanted.preonboarding.backend.repository.CompanyRepository;
 import wanted.preonboarding.backend.repository.NoticeRepository;
+import wanted.preonboarding.backend.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class NoticeService {
-
-	@Autowired
-	NoticeRepository noticeRepository;
-
-	@Autowired
-	CompanyRepository companyRepository;
-
+	
+	private final NoticeRepository noticeRepository;
+	private final CompanyRepository companyRepository;
+	private final ApplicationRepository applicationRepository;
+	private final UserRepository userRepository;
+	
 	// 1. 채용공고 등록 서비스
 	@Transactional
 	public NoticeResponse save(AddNoticeRequest request) {
@@ -55,6 +61,7 @@ public class NoticeService {
     }
     
     // 4-2. 채용공고 검색 서비스
+	@Transactional
     public List<Notice> searchNoticesByKeyword(String keyword) {
         return noticeRepository.findAll().stream()
                 .filter(notice -> {
@@ -74,4 +81,19 @@ public class NoticeService {
     	
     	return new NoticeViewResponse(notice);
     }
+    
+	// 1. 채용공고 등록 서비스
+	@Transactional
+	public ApplicationResponse saveApplication(AddApplication request) {
+		
+		Long userId = request.getUser_id();
+		Long noticeId = request.getNotice_id();
+		
+		User user = userRepository.findById(userId).get();
+		Notice notice = noticeRepository.findById(noticeId).get();
+
+		Application saveApplication = applicationRepository.save(request.toEntity(user, notice));		
+		return new ApplicationResponse(saveApplication);
+	}
+    
 }
